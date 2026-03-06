@@ -1,4 +1,4 @@
-# 常用 Prompt 合集（GitHub 友好版）
+# 常用 Prompt 合集
 
 > 说明  
 > 1. 这是适合直接放到 GitHub Markdown 文档里的版本。  
@@ -8,7 +8,7 @@
 
 ---
 
-## 1. 代码提交前检查 + 自动提交 + 发起 PR
+## 1. w-代码提交前检查 + 自动提交 + 发起 PR
 
 ### Prompt
 ```text
@@ -51,7 +51,7 @@
 
 ---
 
-## 2. 基于已有 Cards / Stories 生成新的 User Story 文档
+## 2. w-基于已有 Cards / Stories 生成新的 User Story 文档
 
 ### Prompt
 ```text
@@ -104,11 +104,11 @@
 
 ---
 
-## 3. 将指定 Card 文档同步到 Synque / 目标系统（安全占位版）
+## 3. w-将指定 Card 文档同步到 Synque / 目标系统（安全占位版）
 
 ### Prompt
 ```text
-请帮我把 `<CARD_FILE>` 同步到 Synque / 目标系统，并在执行前先做一次完整校验。
+请帮我把 `<CARD_FILE>` 同步到 Synque ，并在执行前先做一次完整校验。
 
 执行参数：
 - email: `<EMAIL>`
@@ -148,11 +148,11 @@
 
 ---
 
-## 4. 对齐工作区项目功能、Cards、Stories、Synque 的一致性
+## 4. w-对齐工作区项目功能、Cards、Stories、Synque 的一致性
 
 ### Prompt
 ```text
-请帮我做一次一致性对齐检查，范围包括：
+use our skill, 请帮我做一次一致性对齐检查，范围包括：
 - 工作区项目当前功能实现
 - Cards
 - Stories
