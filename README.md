@@ -1,56 +1,17 @@
-# prompt_list
+# 常用 Prompt 合集（GitHub 友好版）
 
-# 常用 Prompt 合集（优化版）
-
-> 说明
->
-> - 这个文件是 **Markdown + 内嵌 HTML/JS** 的版本。
-> - 若你的 Markdown 渲染器支持脚本，点击按钮可一键复制对应 Prompt。
-> - 若渲染器屏蔽脚本，按钮可能无效，但你仍可直接复制下方文本框内容。
-> - **涉及账号、密码、Token 的内容，建议始终使用占位符，不要把真实密钥长期写进文档。**
+> 说明  
+> 1. 这是适合直接放到 GitHub Markdown 文档里的版本。  
+> 2. GitHub 会给代码块自动提供复制按钮，所以每个 Prompt 都单独放在代码块中。  
+> 3. 每个 Prompt 下面都单独列出该 Prompt 的变量，方便替换。  
+> 4. 涉及账号、密码、Token 的内容，建议始终使用占位符，不要把真实密钥直接提交到仓库。  
 
 ---
 
-<script>
-function copyPrompt(id, btn){
-  const el = document.getElementById(id);
-  if (!el) return;
-  const text = el.value || el.innerText || el.textContent || '';
-  navigator.clipboard.writeText(text).then(() => {
-    if (!btn) return;
-    const oldText = btn.innerText;
-    btn.innerText = '已复制';
-    setTimeout(() => btn.innerText = oldText, 1200);
-  }).catch(() => {
-    alert('复制失败，请手动复制文本框内容');
-  });
-}
-</script>
+## 1. 代码提交前检查 + 自动提交 + 发起 PR
 
-## 统一占位符约定
-
-| 占位符 | 含义 |
-|---|---|
-| `<CURRENT_BRANCH>` | 当前工作分支，例如 `feat-uploadpage` |
-| `<TARGET_BRANCH>` | 目标分支，例如 `init-ai` |
-| `<CARD_FILE>` | 需要处理的卡片文档文件名，例如 `CARD-056.md` |
-| `<EMAIL>` | 登录邮箱 |
-| `<PASSWORD>` | 登录密码 |
-| `<DIRECTUS_ENDPOINT>` | 环境地址 |
-| `<DIRECTUS_TOKEN>` | API Token |
-| `<AUTHOR_NAME>` | 作者名，例如 `Allen` |
-| `<WORKSPACE_SCOPE>` | 需要核对的工作区范围 |
-
----
-
-## 1）代码提交前检查 + 自动提交 + 发起 PR
-
-**适用场景**
-- 你准备把当前分支代码提交到仓库。
-- 希望 AI 先做合规检查，再执行提交与 PR。
-
-<button onclick="copyPrompt('prompt1', this)">复制 Prompt 1</button>
-<textarea id="prompt1" style="width:100%;min-height:420px;">
+### Prompt
+```text
 请先使用可用的 skills / tools 对我当前工作区与变更代码做一次完整检查，再决定是否执行提交与 PR。
 
 任务目标：
@@ -82,18 +43,18 @@ function copyPrompt(id, btn){
 - 建议的 commit message
 - 建议的 PR 标题与描述
 - 如可执行则直接执行；如不可执行则给出下一步最短操作命令
-</textarea>
+```
+
+### 变量
+- `<CURRENT_BRANCH>`：当前工作分支，例如 `feat-uploadpage`
+- `<TARGET_BRANCH>`：目标分支，例如 `init-ai`
 
 ---
 
-## 2）基于已有 Cards / Stories 生成新的 User Story 文档
+## 2. 基于已有 Cards / Stories 生成新的 User Story 文档
 
-**适用场景**
-- 已有相关 User Stories，需要新增一个更细化的故事。
-- 希望 AI 先用现有 skill / 模板把文档写规范。
-
-<button onclick="copyPrompt('prompt2', this)">复制 Prompt 2</button>
-<textarea id="prompt2" style="width:100%;min-height:500px;">
+### Prompt
+```text
 请先使用可用的 skills / templates，根据已有 stories 的风格与结构，帮我写一份新的 User Story 文档。
 
 背景：
@@ -133,20 +94,20 @@ function copyPrompt(id, btn){
    - 需要考虑错误提示与空状态
 6. 请使用偏产品 / 交付文档的语言，不要写成纯代码说明。
 7. 最终请输出为一份可直接保存为 `.md` 的文档内容。
-</textarea>
+```
+
+### 变量
+- `CARD-054`：已有相关卡片，Upload page implementation
+- `CARD-052`：已有相关卡片，file_uploads collection
+- `CARD-056`：已有相关卡片，Navigation updates
+- `D11 Data isolation`：数据隔离策略名称
 
 ---
 
-## 3）将指定 Card 文档同步到 Synque / 目标系统（安全占位版）
+## 3. 将指定 Card 文档同步到 Synque / 目标系统（安全占位版）
 
-**适用场景**
-- 你已经有一份 Card 文档，例如 `CARD-056.md`。
-- 希望 AI 按指定环境与作者信息进行同步。
-
-> 安全建议：不要把真实账号密码和 Token 永久写进知识库或长期文档里，使用时临时替换占位符即可。
-
-<button onclick="copyPrompt('prompt3', this)">复制 Prompt 3</button>
-<textarea id="prompt3" style="width:100%;min-height:460px;">
+### Prompt
+```text
 请帮我把 `<CARD_FILE>` 同步到 Synque / 目标系统，并在执行前先做一次完整校验。
 
 执行参数：
@@ -175,18 +136,22 @@ function copyPrompt(id, btn){
 - 可执行
 - 先校验，后同步
 - 不要跳过失败检查
-</textarea>
+```
+
+### 变量
+- `<CARD_FILE>`：需要同步的卡片文档文件名，例如 `CARD-056.md`
+- `<EMAIL>`：登录邮箱
+- `<PASSWORD>`：登录密码
+- `<DIRECTUS_ENDPOINT>`：环境地址
+- `<DIRECTUS_TOKEN>`：API Token
+- `<AUTHOR_NAME>`：作者名，例如 `Allen`
 
 ---
 
-## 4）对齐工作区项目功能、Cards、Stories、Synque 的一致性
+## 4. 对齐工作区项目功能、Cards、Stories、Synque 的一致性
 
-**适用场景**
-- 你想做一次“全链路对齐检查”。
-- 核查实现、文档、卡片系统、Synque 是否一致。
-
-<button onclick="copyPrompt('prompt4', this)">复制 Prompt 4</button>
-<textarea id="prompt4" style="width:100%;min-height:520px;">
+### Prompt
+```text
 请帮我做一次一致性对齐检查，范围包括：
 - 工作区项目当前功能实现
 - Cards
@@ -217,18 +182,19 @@ function copyPrompt(id, btn){
    - 修完后还需要复查什么
 
 输出格式请使用表格 + 简明结论，尽量让我一眼看出问题在哪里。
-</textarea>
+```
+
+### 变量
+- `第 3 个 prompt`：指向同步 Synque 的那个 Prompt，用于和同步对象做一致性核对
+- `工作区项目`：当前项目代码与功能实现范围
+- `Cards / Stories / Synque`：需要共同核对的一组对象
 
 ---
 
-## 5）一步一步指导模式（可追加到其他 Prompt 后面）
+## 5. 一步一步指导模式（可追加到其他 Prompt 后面）
 
-**适用场景**
-- 你希望 AI 每次只给你一个动作。
-- 你执行完再把结果发回，然后继续下一步。
-
-<button onclick="copyPrompt('prompt5', this)">复制 Prompt 5</button>
-<textarea id="prompt5" style="width:100%;min-height:260px;">
+### Prompt
+```text
 交互要求：
 1. 请一步一步地指导我完成，不要一次输出很多步骤。
 2. 每一轮只告诉我“当前最应该做的下一步”。
@@ -236,20 +202,18 @@ function copyPrompt(id, btn){
 4. 如果我返回的结果有问题，请先帮我判断问题原因，再给我新的下一步。
 5. 每次回复尽量简短、明确、可直接执行。
 6. 除非我主动要求，否则不要一次给出完整方案。
-</textarea>
+```
 
-> 用法建议：把这一段直接追加到其他 Prompt 的最后面，效果最好。
+### 变量
+- 无固定变量  
+- 建议作为附加模板，直接拼接到其他 Prompt 末尾使用
 
 ---
 
-## 6）从零开始编写油猴脚本：自动续期 + 页面右下角 Debug 面板
+## 6. 从零开始编写油猴脚本：自动续期 + 页面右下角 Debug 面板
 
-**适用场景**
-- 想从零开始做一个 Tampermonkey / 油猴脚本。
-- 需要半自动流程、等待人工过 Cloudflare、人机协同、可视化调试。
-
-<button onclick="copyPrompt('prompt6', this)">复制 Prompt 6</button>
-<textarea id="prompt6" style="width:100%;min-height:900px;">
+### Prompt
+```text
 我要从零开始创建一个 Tampermonkey（油猴）脚本，请你担任我的脚本设计与开发助手。
 
 在你给出方案、代码或实现步骤之前，请严格遵守以下沟通规则：
@@ -314,18 +278,23 @@ function copyPrompt(id, btn){
 - 每一步都能显示当前状态
 - 出错时要有明确日志
 - 尽量避免脆弱实现
-</textarea>
+```
+
+### 变量
+- `https://web.freecloud.ltd/index.php?rp=/service-renewals`：续期入口页
+- `https://web.freecloud.ltd/cart.php?a=view`：购物车页
+- `/html/body/div[2]/div[2]/div/div[2]/div[3]/div[2]/div/div/div/div[1]/h3/span`：验证通过后的目标元素 XPath
+- `/html/body/div[2]/div[2]/div/div[2]/div[3]/div[2]/div/div/div/div[2]/div/button`：添加到购物车按钮 XPath
+- `/html/body/div[2]/div[2]/div/div[2]/div[1]/form/div[2]/div[2]/div[2]/div[1]/div/div[1]/div/div/label/span/svg`：购物车页成功进入的目标元素 XPath
+- `/html/body/div[2]/div[2]/div/div[2]/div[2]/div/div[2]/label/div`：需要修改 class 的元素 XPath
+- `/html/body/div[2]/div[2]/div/div[2]/div[2]/div/div[1]/div[4]/div[2]/button`：结账按钮 XPath
 
 ---
 
-## 7）总结《鸟哥的 Linux 私房菜》某一部分内容（精简易懂版）
+## 7. 总结《鸟哥的 Linux 私房菜》某一部分内容（精简易懂版）
 
-**适用场景**
-- 你会提供书里的某一段或某几章内容。
-- 希望 AI 帮你提炼重点，讲清概念，不钻太深。
-
-<button onclick="copyPrompt('prompt7', this)">复制 Prompt 7</button>
-<textarea id="prompt7" style="width:100%;min-height:720px;">
+### Prompt
+```text
 <task>
 总结《鸟哥的 Linux 私房菜》指定部分内容
 </task>
@@ -372,41 +341,37 @@ function copyPrompt(id, btn){
 - 结构清楚
 - 方便快速吸收
 </output_format>
-</textarea>
+```
+
+### 变量
+- `《鸟哥的 Linux 私房菜》指定部分内容`：你后续会提供的原文内容
+- `图表 / 表格`：可选输出形式，用于帮助快速理解知识点
 
 ---
 
 ## 推荐组合用法
 
 ### 组合 A：代码检查 + 一步一步指导
-- `Prompt 1` + `Prompt 5`
-- 适合你边操作边反馈。
+- Prompt 1 + Prompt 5  
+- 适合边操作边反馈。  
 
 ### 组合 B：写新 Story + 同步到系统
-- `Prompt 2` + `Prompt 3`
-- 适合先出文档，再落库或同步。
+- Prompt 2 + Prompt 3  
+- 适合先出文档，再落库或同步。  
 
 ### 组合 C：全链路对齐 + 分步执行
-- `Prompt 4` + `Prompt 5`
-- 适合做项目审计、逐项修正。
+- Prompt 4 + Prompt 5  
+- 适合做项目审计、逐项修正。  
 
 ### 组合 D：先问清需求，再开始写脚本
-- `Prompt 6`
-- 已内置“先一问一答，再出方案”的约束。
+- Prompt 6  
+- 已内置“先一问一答，再出方案”的约束。  
 
 ---
 
-## 额外建议
+## 使用建议
 
-1. **涉及真实凭据时，优先用占位符**
-   - 在发送给 AI 或保存到仓库前，把 `<EMAIL>`、`<PASSWORD>`、`<DIRECTUS_TOKEN>` 等临时替换。
-
-2. **Prompt 尽量写清“先检查，再执行”**
-   - 这样可减少 AI 跳步骤、误操作、假装完成的问题。
-
-3. **需要交互时，附加 Prompt 5 效果最好**
-   - 特别适合你说的“你一步我一步”。
-
-4. **需要落文档时，强制要求输出 `.md` 内容**
-   - 方便直接保存、同步、发 PR。
-
+1. 涉及真实凭据时，优先使用占位符。  
+2. 发送给 AI 前，再临时替换成真实值。  
+3. 需要交互时，把 Prompt 5 追加到目标 Prompt 末尾。  
+4. 需要沉淀文档时，要求对方直接输出 `.md` 内容。  
