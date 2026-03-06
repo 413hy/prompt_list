@@ -156,7 +156,7 @@ use our skill, 请帮我做一次一致性对齐检查，范围包括：
 - 工作区项目当前功能实现
 - Cards
 - Stories
-- Synque / 第 3 个 prompt 中对应的同步对象
+- Synque, use our skill 
 
 目标：确认这几部分是否表达一致、实现一致、验收一致。
 
