@@ -5,6 +5,7 @@
 > 2. GitHub 会给代码块自动提供复制按钮，所以每个 Prompt 都单独放在代码块中。  
 > 3. 每个 Prompt 下面都单独列出该 Prompt 的变量，方便替换。  
 > 4. 涉及账号、密码、Token 的内容，建议始终使用占位符，不要把真实密钥直接提交到仓库。  
+> 5. 所有 Synque 相关 Prompt 都应显式带上 email / pass / DIRECTUS_PRD_ENDPOINT / DIRECTUS_PRD_TOKEN，否则很容易因为缺少登录信息而失败。  
 
 ---
 
@@ -104,32 +105,38 @@
 
 ---
 
-## 3. w-将指定 Card 文档同步到 Synque / 目标系统（安全占位版）
+## 3. w-将指定 Card 文档同步到 Synque（必须携带环境变量）
 
 ### Prompt
 ```text
-请帮我把 `<CARD_FILE>` 同步到 Synque ，并在执行前先做一次完整校验。
+use our skill，请帮我把 `<CARD_FILE>` 同步到 Synque，并在执行前先做一次完整校验。
 
-执行参数：
-- email: `<EMAIL>`
-- password: `<PASSWORD>`
-- DIRECTUS_PRD_ENDPOINT: `<DIRECTUS_ENDPOINT>`
-- DIRECTUS_PRD_TOKEN: `<DIRECTUS_TOKEN>`
+重要要求：
+所有 Synque 相关操作都必须显式携带以下登录信息与环境变量；不要省略，否则会因为缺少 token / endpoint 无法登录或无法执行：
+- email: `<SYNQUE_EMAIL>`
+- pass: `<SYNQUE_PASSWORD>`
+- DIRECTUS_PRD_ENDPOINT=`<DIRECTUS_PRD_ENDPOINT>`
+- DIRECTUS_PRD_TOKEN=`<DIRECTUS_PRD_TOKEN>`
 - Author: `<AUTHOR_NAME>`
 
 执行要求：
 1. 先读取并理解 `<CARD_FILE>` 的内容。
-2. 检查文档格式、字段完整性、标题、描述、验收标准、关联信息是否满足同步要求。
+2. 检查文档格式、字段完整性、标题、描述、验收标准、关联信息是否满足 Synque 同步要求。
 3. 如果发现缺失项或格式问题，先列出问题并修正后再同步。
-4. 同步时请保留作者信息为 `<AUTHOR_NAME>`。
-5. 同步完成后，返回：
+4. 在整个 Synque 登录、校验、同步过程中，始终使用上面的环境变量，不要自行省略或替换。
+5. 同步时请保留作者信息为 `<AUTHOR_NAME>`。
+6. 同步完成后，返回：
    - 是否成功
    - 同步到的对象名称 / ID / 链接（如果可获得）
    - 最终写入的关键字段摘要
-6. 如果你所在环境无法直接执行同步，请不要假装已完成；请输出：
+7. 如果你所在环境无法直接执行同步，请不要假装已完成；请输出：
    - 需要我手动执行的命令或步骤
    - 每一步的预期结果
    - 最容易出错的检查点
+8. 如果登录失败，请优先检查并明确指出：
+   - email / pass 是否缺失
+   - DIRECTUS_PRD_ENDPOINT 是否缺失或格式错误
+   - DIRECTUS_PRD_TOKEN 是否缺失、失效或权限不足
 
 输出风格：
 - 简洁
@@ -140,11 +147,22 @@
 
 ### 变量
 - `<CARD_FILE>`：需要同步的卡片文档文件名，例如 `CARD-056.md`
-- `<EMAIL>`：登录邮箱
-- `<PASSWORD>`：登录密码
-- `<DIRECTUS_ENDPOINT>`：环境地址
-- `<DIRECTUS_TOKEN>`：API Token
+- `<SYNQUE_EMAIL>`：Synque 登录邮箱
+- `<SYNQUE_PASSWORD>`：Synque 登录密码
+- `<DIRECTUS_PRD_ENDPOINT>`：Synque / Directus 环境地址，例如 `https://dev-d11.synque.app`
+- `<DIRECTUS_PRD_TOKEN>`：Synque / Directus Token
 - `<AUTHOR_NAME>`：作者名，例如 `Allen`
+
+### 使用时替换示例（不要把真实值提交到仓库）
+```text
+<CARD_FILE> = CARD-056.md
+<SYNQUE_EMAIL> = your_email_here
+<SYNQUE_PASSWORD> = your_password_here
+<DIRECTUS_PRD_ENDPOINT> = https://dev-d11.synque.app
+<DIRECTUS_PRD_TOKEN> = your_token_here
+<AUTHOR_NAME> = Allen
+```
+
 
 ---
 
@@ -152,11 +170,19 @@
 
 ### Prompt
 ```text
-use our skill, 请帮我做一次一致性对齐检查，范围包括：
+use our skill，请帮我做一次一致性对齐检查，范围包括：
 - 工作区项目当前功能实现
 - Cards
 - Stories
-- Synque, use our skill 
+- Synque
+
+重要要求：
+只要涉及 Synque 的读取、登录、查询、校验或对齐，必须显式使用以下登录信息与环境变量；不要省略，否则会因为缺少 token / endpoint 无法登录或无法获取数据：
+- email: `<SYNQUE_EMAIL>`
+- pass: `<SYNQUE_PASSWORD>`
+- DIRECTUS_PRD_ENDPOINT=`<DIRECTUS_PRD_ENDPOINT>`
+- DIRECTUS_PRD_TOKEN=`<DIRECTUS_PRD_TOKEN>`
+- Author: `<AUTHOR_NAME>`
 
 目标：确认这几部分是否表达一致、实现一致、验收一致。
 
@@ -170,24 +196,44 @@ use our skill, 请帮我做一次一致性对齐检查，范围包括：
    - 验收条件不一致
    - 依赖关系不一致
 3. 再把上述结果与 Synque 中的内容做一次对齐。
-4. 对每个不一致项给出：
+4. 在 Synque 对齐阶段，始终使用上面的环境变量，不要跳过登录或假设已经登录。
+5. 对每个不一致项给出：
    - 类型（缺失 / 冲突 / 命名不一致 / 验收不一致 / 状态不一致）
    - 影响范围
    - 建议修复方式
    - 优先级
-5. 最后输出一个总结：
+6. 最后输出一个总结：
    - 已对齐项
    - 未对齐项
    - 建议先修什么
    - 修完后还需要复查什么
+7. 如果 Synque 无法访问，请明确指出是以下哪类问题：
+   - 凭据缺失
+   - Endpoint 配置错误
+   - Token 无效或权限不足
+   - 当前环境无法执行相关 skill / tool
 
 输出格式请使用表格 + 简明结论，尽量让我一眼看出问题在哪里。
 ```
 
 ### 变量
-- `第 3 个 prompt`：指向同步 Synque 的那个 Prompt，用于和同步对象做一致性核对
+- `<SYNQUE_EMAIL>`：Synque 登录邮箱
+- `<SYNQUE_PASSWORD>`：Synque 登录密码
+- `<DIRECTUS_PRD_ENDPOINT>`：Synque / Directus 环境地址，例如 `https://dev-d11.synque.app`
+- `<DIRECTUS_PRD_TOKEN>`：Synque / Directus Token
+- `<AUTHOR_NAME>`：作者名，例如 `Allen`
 - `工作区项目`：当前项目代码与功能实现范围
 - `Cards / Stories / Synque`：需要共同核对的一组对象
+
+### 使用时替换示例（不要把真实值提交到仓库）
+```text
+<SYNQUE_EMAIL> = your_email_here
+<SYNQUE_PASSWORD> = your_password_here
+<DIRECTUS_PRD_ENDPOINT> = https://dev-d11.synque.app
+<DIRECTUS_PRD_TOKEN> = your_token_here
+<AUTHOR_NAME> = Allen
+```
+
 
 ---
 
