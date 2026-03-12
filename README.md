@@ -13,37 +13,48 @@
 
 ### Prompt
 ```text
-请先使用可用的 skills / tools 对我当前工作区与变更代码做一次完整检查，再决定是否执行提交与 PR。
+【变量区】
+- <CURRENT_BRANCH> = （可留空；优先自动从当前 git 分支获取）
+- <TARGET_BRANCH> = （可留空；优先自动从仓库默认分支或项目约定中获取）
+
+【自动发现规则】
+1. 如果变量未提供，请优先从当前工作区、仓库配置、README、需求文档、已有 cards / stories / spec 中自动查找。
+2. 如果有多个候选值，请选择与当前变更最相关的一个，并说明判断依据。
+3. 如果无法可靠确定，再明确指出缺失项，不要假装已完成。
+
+【任务】
+请先使用可用的 skills / tools，对我当前工作区和待提交代码做一次完整检查，再决定是否执行提交与 PR。
 
 任务目标：
-1. 检查我当前分支 `<CURRENT_BRANCH>` 上所有待提交代码，确认是否符合仓库规范、项目要求、已有 cards / stories 以及主流程约束。
+1. 检查当前分支上的所有待提交代码，确认是否符合当前仓库规范、项目要求、已有需求文档 / 任务卡片 / 用户故事 / 流程约束。
 2. 重点检查：
    - 功能是否完整
-   - 是否存在明显 bug / edge case / 回归风险
+   - 是否存在明显 bug、边界场景遗漏、回归风险
    - 命名、目录结构、注释、可维护性是否合理
-   - 是否有权限、数据隔离、接口调用、状态处理、异常处理方面的问题
-   - 是否存在 lint、type、test、build、依赖或安全风险
-3. 输出一份简明检查结论：
-   - `PASS`：可以提交
-   - `BLOCKED`：暂不建议提交
+   - 权限、数据隔离、接口调用、状态处理、异常处理是否存在问题
+   - 是否存在 lint、type、test、build、依赖、安全风险
+   - 实现是否与已有需求和验收标准一致
+3. 输出检查结论：
+   - `PASS`
+   - `BLOCKED`
 4. 如果是 `BLOCKED`，请列出必须先修复的问题，并按优先级排序。
 5. 如果是 `PASS`，请直接继续执行：
-   - 将当前变更提交到分支 `<CURRENT_BRANCH>`
+   - 提交当前变更
    - 生成规范的 commit message
-   - 发起从 `<CURRENT_BRANCH>` 到 `<TARGET_BRANCH>` 的 PR
-6. 如果你所在环境无法直接执行 git push / 创建 PR，请不要假装已完成；请给出：
+   - 发起到目标分支的 PR
+6. 如果无法直接执行 git commit / push / 创建 PR，请不要假装已完成；请输出：
    - 建议的 commit message
    - PR title
    - PR description
-   - 我只需要复制执行的命令
+   - 我只需要复制执行的最短命令
 
 输出格式：
 - 检查范围
 - 风险结论（PASS / BLOCKED）
-- 发现的问题（如有）
+- 发现的问题
 - 建议的 commit message
 - 建议的 PR 标题与描述
-- 如可执行则直接执行；如不可执行则给出下一步最短操作命令
+- 如不可执行则给出下一步最短操作命令
 ```
 
 ### 变量
@@ -56,26 +67,24 @@
 
 ### Prompt
 ```text
-请先使用可用的 skills / templates，根据已有 stories 的风格与结构，帮我写一份新的 User Story 文档。
+【变量区】
+- <NEW_STORY_REQUIREMENT> = 这里写本次新增需求
 
-背景：
-- Policy：`D11 Data isolation`，要求用户只能看到自己的 secards。
-- 已有关联 Cards / Stories：
-  - `CARD-054`：Upload page implementation
-  - `CARD-052`：file_uploads collection
-  - `CARD-056`：Navigation updates
+【自动发现规则】
+1. 除了 `<NEW_STORY_REQUIREMENT>` 以外，其余上下文请优先从当前工作区自动查找，包括：
+   - cards
+   - stories
+   - spec / PRD / design doc
+   - policy / validation / business rules
+   - 相关模块、页面、流程
+2. 如果上下文不足，请基于现有材料做合理补全，并明确标出假设项。
 
-我需要新增的 User Story：
-当用户点击“上传文件”时，不能直接上传；应先弹出一个对话框，让用户选择报表上传类型：
-- `day`
-- `week`
-- `month`
-
-只有在用户完成类型选择后，才允许继续上传。
+【任务】
+请先使用可用的 skills / templates，根据当前项目中已有的需求材料风格与结构，帮我写一份新的 User Story 文档。
 
 请你完成以下内容：
-1. 先理解并继承已有 Cards / Stories 的上下文与命名风格。
-2. 输出一份结构完整的新 User Story 文档。
+1. 先理解并继承已有需求材料的上下文、命名风格与文档结构。
+2. 输出一份结构完整、可直接落地的新 User Story 文档。
 3. 文档中至少包含：
    - Title
    - Background / Context
@@ -84,24 +93,28 @@
    - Acceptance Criteria
    - Validation Rules
    - Error / Edge Cases
-   - Dependencies / Related Cards
+   - Dependencies / Related Items
    - Out of Scope
-4. Acceptance Criteria 要写得可测试、可验收。
-5. 请特别覆盖这些规则：
-   - 未选择 `day / week / month` 时，不能上传
-   - 选择后才允许继续
-   - 用户能明确知道当前所选类型
-   - 取消对话框后的行为要定义清楚
-   - 需要考虑错误提示与空状态
+4. Acceptance Criteria 必须清晰、可测试、可验收。
+5. 请覆盖：
+   - 用户操作前置条件
+   - 用户操作流程
+   - 成功条件
+   - 失败提示
+   - 取消 / 中断 / 空状态处理
+   - 边界情况与异常情况
 6. 请使用偏产品 / 交付文档的语言，不要写成纯代码说明。
 7. 最终请输出为一份可直接保存为 `.md` 的文档内容。
+
+输出要求：
+- 结构清晰
+- 表达一致
+- 验收明确
+- 能直接作为后续开发与测试依据
 ```
 
 ### 变量
-- `CARD-054`：已有相关卡片，Upload page implementation
-- `CARD-052`：已有相关卡片，file_uploads collection
-- `CARD-056`：已有相关卡片，Navigation updates
-- `D11 Data isolation`：数据隔离策略名称
+- `<NEW_STORY_REQUIREMENT>`：- <NEW_STORY_REQUIREMENT> = 这里写本次新增需求
 
 ---
 
@@ -109,34 +122,45 @@
 
 ### Prompt
 ```text
-use our skill，请帮我把 `<CARD_FILE>` 同步到 Synque，并在执行前先做一次完整校验。
+【变量区】
+- <SOURCE_ITEM> = 需要同步的源文档 / 卡片 / 故事 / 文件
+- <TARGET_SYSTEM> = 目标系统名称
+- <AUTH_CONTEXT> = （可留空；如工作区或配置中已有相关账号、token、endpoint、author 等信息，则优先自动发现并使用）
 
-重要要求：
-所有 Synque 相关操作都必须显式携带以下登录信息与环境变量；不要省略，否则会因为缺少 token / endpoint 无法登录或无法执行：
-- email: `<SYNQUE_EMAIL>`
-- pass: `<SYNQUE_PASSWORD>`
-- DIRECTUS_PRD_ENDPOINT=`<DIRECTUS_PRD_ENDPOINT>`
-- DIRECTUS_PRD_TOKEN=`<DIRECTUS_PRD_TOKEN>`
-- Author: `<AUTHOR_NAME>`
+【自动发现规则】
+1. 如果 `<AUTH_CONTEXT>` 未提供，请优先从以下位置自动查找：
+   - `.env*`
+   - 配置文件
+   - README / 接入文档
+   - 已有同步脚本 / 集成脚本
+   - 当前仓库中与目标系统相关的代码
+2. 如果找到多个候选值，请选择与当前项目环境最匹配的一个，并说明依据。
+3. 如果敏感信息不存在，不要编造，直接指出缺失项。
+4. 在整个登录、读取、校验、同步过程中，优先使用显式传入的变量；若为空，再使用自动发现结果。
+
+【任务】
+请优先使用可用的 skills / tools，帮我把 `<SOURCE_ITEM>` 同步到 `<TARGET_SYSTEM>`，并在执行前先做一次完整校验。
 
 执行要求：
-1. 先读取并理解 `<CARD_FILE>` 的内容。
-2. 检查文档格式、字段完整性、标题、描述、验收标准、关联信息是否满足 Synque 同步要求。
-3. 如果发现缺失项或格式问题，先列出问题并修正后再同步。
-4. 在整个 Synque 登录、校验、同步过程中，始终使用上面的环境变量，不要自行省略或替换。
-5. 同步时请保留作者信息为 `<AUTHOR_NAME>`。
+1. 先读取并理解 `<SOURCE_ITEM>` 的内容。
+2. 检查格式、字段完整性、标题、描述、验收标准、关联信息是否满足 `<TARGET_SYSTEM>` 的同步要求。
+3. 如果发现缺失项、字段错误、格式问题或不一致项，先列出问题并修正建议，再决定是否继续同步。
+4. 同步过程中不要省略认证信息，也不要假设已经登录。
+5. 同步时尽量保留作者、来源、标签、状态等关键信息（如果适用）。
 6. 同步完成后，返回：
    - 是否成功
-   - 同步到的对象名称 / ID / 链接（如果可获得）
+   - 同步后的对象名称 / ID / 链接（如果可获得）
    - 最终写入的关键字段摘要
-7. 如果你所在环境无法直接执行同步，请不要假装已完成；请输出：
-   - 需要我手动执行的命令或步骤
+7. 如果无法直接执行同步，请不要假装已完成；请输出：
+   - 手动执行步骤
    - 每一步的预期结果
    - 最容易出错的检查点
-8. 如果登录失败，请优先检查并明确指出：
-   - email / pass 是否缺失
-   - DIRECTUS_PRD_ENDPOINT 是否缺失或格式错误
-   - DIRECTUS_PRD_TOKEN 是否缺失、失效或权限不足
+8. 如果登录或同步失败，请明确指出：
+   - 认证信息是否缺失
+   - 环境变量是否缺失或格式错误
+   - Token 是否失效或权限不足
+   - Endpoint / API 地址是否错误
+   - 当前环境是否不支持直接执行相关 skill / tool
 
 输出风格：
 - 简洁
@@ -146,23 +170,19 @@ use our skill，请帮我把 `<CARD_FILE>` 同步到 Synque，并在执行前先
 ```
 
 ### 变量
-- `<CARD_FILE>`：需要同步的卡片文档文件名，例如 `CARD-056.md`
-- `<SYNQUE_EMAIL>`：Synque 登录邮箱
-- `<SYNQUE_PASSWORD>`：Synque 登录密码
-- `<DIRECTUS_PRD_ENDPOINT>`：Synque / Directus 环境地址，例如 `https://dev-d11.synque.app`
-- `<DIRECTUS_PRD_TOKEN>`：Synque / Directus Token
-- `<AUTHOR_NAME>`：作者名，例如 `Allen`
+- <SOURCE_ITEM>：源文档 / 卡片 / 故事 / 文件
+- <TARGET_SYSTEM>：目标系统名称
+- <AUTH_CONTEXT>：认证与环境变量信息块，可选
 
 ### 使用时替换示例（不要把真实值提交到仓库）
 ```text
-<CARD_FILE> = CARD-056.md
-<SYNQUE_EMAIL> = your_email_here
-<SYNQUE_PASSWORD> = your_password_here
-<DIRECTUS_PRD_ENDPOINT> = https://dev-d11.synque.app
-<DIRECTUS_PRD_TOKEN> = your_token_here
-<AUTHOR_NAME> = Allen
+<AUTH_CONTEXT> =
+- email: your_email
+- pass: your_password
+- API_ENDPOINT: your_endpoint
+- API_TOKEN: your_token
+- Author: your_name
 ```
-
 
 ---
 
@@ -170,70 +190,72 @@ use our skill，请帮我把 `<CARD_FILE>` 同步到 Synque，并在执行前先
 
 ### Prompt
 ```text
-use our skill，请帮我做一次一致性对齐检查，范围包括：
-- 工作区项目当前功能实现
-- Cards
-- Stories
-- Synque
+【变量区】
+- <CHECK_SCOPE> = （可留空；优先自动从当前工作区和本次需求上下文中识别）
+- <AUTH_CONTEXT> = （可留空；如涉及外部系统登录、读取、查询、同步，则优先从工作区或配置中自动发现）
 
-重要要求：
-只要涉及 Synque 的读取、登录、查询、校验或对齐，必须显式使用以下登录信息与环境变量；不要省略，否则会因为缺少 token / endpoint 无法登录或无法获取数据：
-- email: `<SYNQUE_EMAIL>`
-- pass: `<SYNQUE_PASSWORD>`
-- DIRECTUS_PRD_ENDPOINT=`<DIRECTUS_PRD_ENDPOINT>`
-- DIRECTUS_PRD_TOKEN=`<DIRECTUS_PRD_TOKEN>`
-- Author: `<AUTHOR_NAME>`
+【自动发现规则】
+1. 如果 `<CHECK_SCOPE>` 未提供，请根据当前工作区、代码变更、模块目录、文档上下文自动识别相关范围。
+2. 如果涉及外部系统，请优先从 `.env*`、配置文件、README、同步脚本中自动查找认证信息。
+3. 如果无法可靠确定，不要假装已对齐完成，直接指出缺失项。
 
-目标：确认这几部分是否表达一致、实现一致、验收一致。
+【任务】
+请优先使用可用的 skills / tools，帮我做一次一致性对齐检查，范围包括：
+- 当前工作区 / 项目代码实现
+- 需求文档 / 用户故事 / 任务卡片
+- 外部系统 / 同步系统中的相关记录
+- 其他与当前需求有关的关键上下文
+
+目标：
+确认“实现、文档、卡片、系统记录、验收标准”这几部分是否表达一致、实现一致、状态一致、验收一致。
 
 请按以下步骤完成：
-1. 先梳理当前项目实际实现了哪些功能，以及每个功能的边界。
-2. 对照 Cards 与 Stories，检查是否存在：
+1. 梳理当前项目实际实现了哪些功能，以及每个功能的边界。
+2. 对照需求文档 / 用户故事 / 任务卡片，检查是否存在：
    - 文档有但实现没有
    - 实现有但文档没写
    - 命名不一致
    - 流程不一致
    - 验收条件不一致
    - 依赖关系不一致
-3. 再把上述结果与 Synque 中的内容做一次对齐。
-4. 在 Synque 对齐阶段，始终使用上面的环境变量，不要跳过登录或假设已经登录。
+   - 状态不一致
+3. 再把上述结果与外部系统 / 同步系统中的内容做一次对齐。
+4. 如果涉及外部系统，不要跳过登录或假设已经登录。
 5. 对每个不一致项给出：
-   - 类型（缺失 / 冲突 / 命名不一致 / 验收不一致 / 状态不一致）
+   - 类型
    - 影响范围
    - 建议修复方式
    - 优先级
-6. 最后输出一个总结：
+6. 最后输出：
    - 已对齐项
    - 未对齐项
-   - 建议先修什么
-   - 修完后还需要复查什么
-7. 如果 Synque 无法访问，请明确指出是以下哪类问题：
+   - 建议优先修复项
+   - 修复后还需要复查的内容
+7. 如果外部系统无法访问，请明确指出：
    - 凭据缺失
-   - Endpoint 配置错误
+   - Endpoint / API 配置错误
    - Token 无效或权限不足
    - 当前环境无法执行相关 skill / tool
 
-输出格式请使用表格 + 简明结论，尽量让我一眼看出问题在哪里。
+输出格式：
+- 表格：列出不一致项
+- 简明结论：说明整体对齐状态
+- 优先级建议：说明先修什么
 ```
 
 ### 变量
-- `<SYNQUE_EMAIL>`：Synque 登录邮箱
-- `<SYNQUE_PASSWORD>`：Synque 登录密码
-- `<DIRECTUS_PRD_ENDPOINT>`：Synque / Directus 环境地址，例如 `https://dev-d11.synque.app`
-- `<DIRECTUS_PRD_TOKEN>`：Synque / Directus Token
-- `<AUTHOR_NAME>`：作者名，例如 `Allen`
-- `工作区项目`：当前项目代码与功能实现范围
-- `Cards / Stories / Synque`：需要共同核对的一组对象
+- `<CHECK_SCOPE>`：检查范围，可选
+- `<AUTH_CONTEXT>`：外部系统认证信息块，可选
 
 ### 使用时替换示例（不要把真实值提交到仓库）
 ```text
-<SYNQUE_EMAIL> = your_email_here
-<SYNQUE_PASSWORD> = your_password_here
-<DIRECTUS_PRD_ENDPOINT> = https://dev-d11.synque.app
-<DIRECTUS_PRD_TOKEN> = your_token_here
-<AUTHOR_NAME> = Allen
+<AUTH_CONTEXT> =
+- email: your_email
+- pass: your_password
+- API_ENDPOINT: your_endpoint
+- API_TOKEN: your_token
+- Author: your_name
 ```
-
 
 ---
 
