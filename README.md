@@ -399,53 +399,47 @@
 
 ### Prompt
 ```text
+【变量区】
+- <SCRIPT_GOAL> = 这次油猴脚本要实现的目标
+- <TARGET_CONTEXT> = 目标网站 / 页面 / 触发场景 / 关键页面特征
+- <CORE_FLOW> = 需要自动执行的核心流程（按步骤列出）
+- <SPECIAL_REQUIREMENTS> = （可留空；例如 debug 面板、开始/暂停按钮、重试策略、仅特定 URL 生效等）
+
+【任务】
 我要从零开始创建一个 Tampermonkey（油猴）脚本，请你担任我的脚本设计与开发助手。
 
+本次脚本目标：
+`<SCRIPT_GOAL>`
+
+目标上下文：
+`<TARGET_CONTEXT>`
+
+核心流程：
+`<CORE_FLOW>`
+
+补充要求：
+`<SPECIAL_REQUIREMENTS>`
+
 在你给出方案、代码或实现步骤之前，请严格遵守以下沟通规则：
-1. 先向我提问。
+1. 先向我提问，不要直接给方案或完整代码。
 2. 一次只问一个问题。
-3. 根据我的回答继续追问。
-4. 只有当你对我的真实需求、页面环境、风险点、执行目标有至少 95% 把握时，才开始输出方案。
-5. 在此之前，不要直接给完整代码。
+3. 根据我的回答继续追问，优先确认最关键、最容易影响实现的问题。
+4. 只有当你对我的真实需求、页面环境、执行目标、失败处理方式、稳定性要求和风险点有至少 95% 把握时，才开始输出方案。
+5. 在此之前，不要直接输出完整代码。
+6. 如果我给的信息不完整，请通过提问逐步补齐，不要自行脑补关键前提。
+7. 如果你发现某些实现方式可能脆弱、容易失效或有风控风险，请优先提问确认，不要直接默认采用。
 
-脚本目标：
-实现一个“自动续期”脚本，并在页面右下角提供 debug 面板，方便排查流程卡在哪一步。
-
-核心续期逻辑如下：
-
-① 进入页面：
-- URL：`https://web.freecloud.ltd/index.php?rp=/service-renewals`
-- 页面开始会有 Cloudflare 人机验证。
-- 脚本必须先等待我手动通过验证，再继续后续流程。
-- 只有检测到以下元素出现时，才表示验证已通过并允许进入下一步：
-  - 元素文本：`新加坡DirectAdmin - 新加坡Webfreecloud`
-  - XPath：`/html/body/div[2]/div[2]/div/div[2]/div[3]/div[2]/div/div/div/div[1]/h3/span`
-
-② 点击“添加到购物车”按钮：
-- XPath：`/html/body/div[2]/div[2]/div/div[2]/div[3]/div[2]/div/div/div/div[2]/div/button`
-
-③ 等待跳转到购物车页面：
-- 目标 URL：`https://web.freecloud.ltd/cart.php?a=view`
-- 只有检测到以下元素后，才算成功进入下一步：
-  - XPath：`/html/body/div[2]/div[2]/div/div[2]/div[1]/form/div[2]/div[2]/div[2]/div[1]/div/div[1]/div/div/label/span/svg`
-
-④ 编辑页面元素：
-- XPath：`/html/body/div[2]/div[2]/div/div[2]/div[2]/div/div[2]/label/div`
-- 将：`<div class="checkbox-styled">`
-- 改为：`<div class="checkbox-styled checked">`
-
-⑤ 点击“结账”按钮：
-- XPath：`/html/body/div[2]/div[2]/div/div[2]/div[2]/div/div[1]/div[4]/div[2]/button`
-
-请在真正开始写脚本前，围绕以下方向逐步向我确认：
-- 这个脚本是完全自动还是半自动
+请你在提问阶段，优先逐步确认以下方面：
+- 这个脚本是完全自动、半自动，还是人工确认后继续
 - 是否允许使用轮询、MutationObserver、定时器重试
 - 页面是否可能改版，是否需要更稳健的选择器策略
-- debug 面板需要显示哪些状态 / 日志 / 错误
-- 失败后是停止、重试还是回滚
-- 是否需要开始/暂停按钮
-- 是否需要仅在特定 URL 生效
-- 是否有账号安全、频率限制、风控限制方面的顾虑
+- 关键元素应通过什么方式识别（XPath、CSS、文本、URL、属性、组合条件）
+- 某一步失败后是停止、重试、跳过，还是回滚
+- 是否需要开始 / 暂停 / 继续 / 停止按钮
+- 是否需要右下角 debug 面板
+- debug 面板需要显示哪些状态、日志、错误、步骤进度
+- 是否只在特定 URL / 特定页面生效
+- 是否有账号安全、访问频率、风控、人机验证、权限限制等顾虑
 
 当你确认完问题后，再按以下结构输出：
 1. 需求确认总结
@@ -459,20 +453,25 @@
 代码要求：
 - 可直接保存为 `.user.js`
 - 注释清晰
-- 带右下角 debug 面板
+- 结构清楚，便于后续维护
+- 尽量避免脆弱实现
 - 每一步都能显示当前状态
 - 出错时要有明确日志
-- 尽量避免脆弱实现
+- 如果需要 debug 面板，请放在页面右下角
+- 如果流程依赖人工完成某一步（例如验证码、人机验证、手动确认），脚本必须能够等待该条件满足后再继续
+
+输出方式要求：
+- 在提问阶段，每次只问一个问题
+- 不要一次抛出多个问题
+- 不要过早开始写代码
+- 当信息足够后，再一次性输出完整方案与代码
 ```
 
 ### 变量
-- `https://web.freecloud.ltd/index.php?rp=/service-renewals`：续期入口页
-- `https://web.freecloud.ltd/cart.php?a=view`：购物车页
-- `/html/body/div[2]/div[2]/div/div[2]/div[3]/div[2]/div/div/div/div[1]/h3/span`：验证通过后的目标元素 XPath
-- `/html/body/div[2]/div[2]/div/div[2]/div[3]/div[2]/div/div/div/div[2]/div/button`：添加到购物车按钮 XPath
-- `/html/body/div[2]/div[2]/div/div[2]/div[1]/form/div[2]/div[2]/div[2]/div[1]/div/div[1]/div/div/label/span/svg`：购物车页成功进入的目标元素 XPath
-- `/html/body/div[2]/div[2]/div/div[2]/div[2]/div/div[2]/label/div`：需要修改 class 的元素 XPath
-- `/html/body/div[2]/div[2]/div/div[2]/div[2]/div/div[1]/div[4]/div[2]/button`：结账按钮 XPath
+- `<SCRIPT_GOAL>` = 这次油猴脚本要实现的目标
+- `<TARGET_CONTEXT>` = 目标网站 / 页面 / 触发场景 / 关键页面特征
+- `<CORE_FLOW>` = 需要自动执行的核心流程（按步骤列出）
+- `<SPECIAL_REQUIREMENTS>` = （可留空；例如 debug 面板、开始/暂停按钮、重试策略、仅特定 URL 生效等）
 
 ---
 
