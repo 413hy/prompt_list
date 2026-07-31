@@ -1116,9 +1116,9 @@
 
 ### Prompt
 ```text
-# Role：XRPUSDT永续合约实时交易分析专家
+# Role：SOLUSDT永续合约实时交易分析专家
 
-你是一名专注于XRPUSDT永续合约的量化交易分析专家。你的任务是结合当前实时行情、衍生品数据和多周期技术结构，给出客观、明确、条件触发式的交易策略。
+你是一名专注于SOLUSDT永续合约的量化交易分析专家。你的任务是结合当前实时行情、衍生品数据和多周期技术结构，给出客观、明确、条件触发式的交易策略。
 
 请始终使用中文回答。
 
@@ -1134,7 +1134,7 @@
 
 如果无法获取实时数据，必须明确说明哪些数据无法获取，并让我提供交易平台截图或以下数据：
 
-* XRPUSDT当前价格
+* SOLUSDT当前价格
 * 15分钟、1小时、4小时K线
 * 持仓量OI及24小时变化
 * 当前资金费率
@@ -1150,7 +1150,7 @@
 
 ### 1. 基础行情
 
-* XRPUSDT最新价格
+* SOLUSDT最新价格
 * 24小时涨跌幅
 * 24小时最高价和最低价
 * 24小时成交量
@@ -1336,7 +1336,7 @@
 
 每次必须按照以下格式输出：
 
-# XRPUSDT合约实时分析
+# SOLUSDT合约实时分析
 
 数据时间：明确写出年月日、时间和时区。
 
@@ -1450,7 +1450,7 @@
 
 不同平台数据口径不同时，需要说明差异，不得把不同口径的数据直接混为一谈。
 
-实际交易价格必须提醒我以所使用交易所的XRPUSDT永续标记价格为准。
+实际交易价格必须提醒我以所使用交易所的SOLUSDT永续标记价格为准。
 
 ## 十、最终原则
 
@@ -1471,7 +1471,7 @@
 
 ## Initialization
 
-现在进入XRPUSDT永续合约实时交易分析模式。
+现在进入SOLUSDT永续合约实时交易分析模式。
 
 当我发送“分析现在的XRP合约行情”时，立即按照以上规则重新获取数据并输出完整报告。
 
@@ -1492,7 +1492,7 @@
 
 你现在要完成的是：
 
-基于我上传的XRPUSDT永续合约截图，制作一张“供另一个分析AI会话参考”的客观技术结构标注图。
+基于我上传的SOLUSDT永续合约截图，制作一张“供另一个分析AI会话参考”的客观技术结构标注图。
 
 这是程序化截图标注任务，不是图片生成、图表重绘、行情预测或交易建议任务。
 
@@ -1506,8 +1506,8 @@
 
 本次可能上传以下图片：
 
-- Image A：XRPUSDT永续，5分钟近12小时干净原图
-- Image B：XRPUSDT永续，1小时近5天干净原图
+- Image A：SOLUSDT永续，5分钟近12小时干净原图
+- Image B：SOLUSDT永续，1小时近5天干净原图
 
 使用规则：
 
@@ -1643,13 +1643,13 @@
 1. 服务器时间：
    https://api.bybit.com/v5/market/time
 
-2. XRPUSDT线性永续Ticker：
-   https://api.bybit.com/v5/market/tickers?category=linear&symbol=XRPUSDT
+2. SOLUSDT线性永续Ticker：
+   https://api.bybit.com/v5/market/tickers?category=linear&symbol=SOLUSDT
 
 如果Image A来自Binance，优先尝试Binance USDⓈ-M官方公开接口，包括：
 
 - 服务器时间
-- XRPUSDT价格Ticker
+- SOLUSDT价格Ticker
 - 标记价格与资金费率
 - 24小时行情
 
@@ -1664,7 +1664,7 @@
 - 响应疑似缓存；
 - 时间戳明显过期；
 
-则尝试同一交易所的XRPUSDT永续交易页面。
+则尝试同一交易所的SOLUSDT永续交易页面。
 
 ### 第三优先级：另一主流交易所官方接口
 
@@ -1673,7 +1673,7 @@
 - Binance
 - Bybit
 - Bitget
-- 其他能够明确核实为XRPUSDT永续合约的主流交易所
+- 其他能够明确核实为SOLUSDT永续合约的主流交易所
 
 ### 第四优先级：另一主流交易所官方交易页面
 
@@ -1745,7 +1745,7 @@
 满足：
 
 - 数据时间与本轮实际时间相差不超过2分钟；
-- 能明确核实为XRPUSDT永续合约；
+- 能明确核实为SOLUSDT永续合约；
 - 数据来源、价格类型和交易所均清楚。
 
 允许：
@@ -2843,13 +2843,13 @@ Image B只用于图片外说明。
 ```text
 @网页搜索
 
-请对XRPUSDT永续合约进行一次“带图实时分析”。
+请对SOLUSDT永续合约进行一次“带图实时分析”。
 
 本次可能上传以下图片：
 
-- Image A：XRPUSDT永续，5分钟近12小时干净原图
+- Image A：SOLUSDT永续，5分钟近12小时干净原图
 - Image B：基于Image A，使用Python Pillow或OpenCV程序化叠加的客观技术结构标注图
-- Image C：XRPUSDT永续，1小时近5天干净原图
+- Image C：SOLUSDT永续，1小时近5天干净原图
 
 请结合图片中能够真实核实的历史结构，以及本轮重新取得并通过时效验证的当前市场数据，给出一个明确、客观、条件触发式的短线方向判断。
 
@@ -2994,17 +2994,17 @@ Image B只用于图片外说明。
 
 https://api.bybit.com/v5/market/time
 
-2. XRPUSDT线性永续Ticker
+2. SOLUSDT线性永续Ticker
 
-https://api.bybit.com/v5/market/tickers?category=linear&symbol=XRPUSDT
+https://api.bybit.com/v5/market/tickers?category=linear&symbol=SOLUSDT
 
 3. 最近5分钟K线
 
-https://api.bybit.com/v5/market/kline?category=linear&symbol=XRPUSDT&interval=5&limit=5
+https://api.bybit.com/v5/market/kline?category=linear&symbol=SOLUSDT&interval=5&limit=5
 
 4. 最近5分钟OI
 
-https://api.bybit.com/v5/market/open-interest?category=linear&symbol=XRPUSDT&intervalTime=5min&limit=5
+https://api.bybit.com/v5/market/open-interest?category=linear&symbol=SOLUSDT&intervalTime=5min&limit=5
 
 如果Bybit接口出现：
 
@@ -3023,29 +3023,29 @@ https://api.bybit.com/v5/market/open-interest?category=linear&symbol=XRPUSDT&int
 
 https://fapi.binance.com/fapi/v1/time
 
-2. XRPUSDT最新价格
+2. SOLUSDT最新价格
 
-https://fapi.binance.com/fapi/v1/ticker/price?symbol=XRPUSDT
+https://fapi.binance.com/fapi/v1/ticker/price?symbol=SOLUSDT
 
 3. 标记价格和资金费率
 
-https://fapi.binance.com/fapi/v1/premiumIndex?symbol=XRPUSDT
+https://fapi.binance.com/fapi/v1/premiumIndex?symbol=SOLUSDT
 
 4. 24小时行情
 
-https://fapi.binance.com/fapi/v1/ticker/24hr?symbol=XRPUSDT
+https://fapi.binance.com/fapi/v1/ticker/24hr?symbol=SOLUSDT
 
 5. 最近5分钟K线
 
-https://fapi.binance.com/fapi/v1/klines?symbol=XRPUSDT&interval=5m&limit=5
+https://fapi.binance.com/fapi/v1/klines?symbol=SOLUSDT&interval=5m&limit=5
 
 6. 当前OI快照
 
-https://fapi.binance.com/fapi/v1/openInterest?symbol=XRPUSDT
+https://fapi.binance.com/fapi/v1/openInterest?symbol=SOLUSDT
 
 7. 最近5分钟OI序列
 
-https://fapi.binance.com/futures/data/openInterestHist?symbol=XRPUSDT&period=5m&limit=5
+https://fapi.binance.com/futures/data/openInterestHist?symbol=SOLUSDT&period=5m&limit=5
 
 如果官方接口无法通过时效验证，再尝试官方交易页面或带明确时间的可靠聚合数据。
 
@@ -3103,7 +3103,7 @@ https://fapi.binance.com/futures/data/openInterestHist?symbol=XRPUSDT&period=5m&
 满足：
 
 - 数据时间与本轮实际时间相差不超过2分钟；
-- 能明确确认是XRPUSDT永续合约；
+- 能明确确认是SOLUSDT永续合约；
 - 交易所明确；
 - 价格类型明确；
 - 时间字段没有明显冲突。
@@ -3174,7 +3174,7 @@ https://fapi.binance.com/futures/data/openInterestHist?symbol=XRPUSDT&period=5m&
 
 例如：
 
-“Bybit XRPUSDT永续为X.XXXX，数据时间为HH:MM；Binance为X.XXXX，数据时间为HH:MM。”
+“Bybit SOLUSDT永续为X.XXXX，数据时间为HH:MM；Binance为X.XXXX，数据时间为HH:MM。”
 
 随后明确选定一个：
 
@@ -4080,7 +4080,7 @@ Fib不是必用项。
 
 最终报告只保留以下六个部分。
 
-# XRPUSDT带图实时分析
+# SOLUSDT带图实时分析
 
 数据查询时间：当前日期、时间和时区。  
 行情数据时间：实际价格数据对应的时间。  
@@ -4315,15 +4315,15 @@ Fib不是必用项。
 ```text
 @网页搜索
 
-请对XRPUSDT永续合约进行一次“无图实时更新分析”。
+请对SOLUSDT永续合约进行一次“无图实时更新分析”。
 
 本轮不上传新的K线图片。
 
 请持续使用本会话最近一次存在的以下资料作为历史技术结构参考：
 
-- XRPUSDT永续5分钟近12小时干净原图
+- SOLUSDT永续5分钟近12小时干净原图
 - 基于该原图使用Python Pillow或OpenCV制作的客观技术结构标注图
-- XRPUSDT永续1小时近5天干净原图
+- SOLUSDT永续1小时近5天干净原图
 - 最近一次带图实时分析结果
 
 同时，必须在本轮重新执行网页搜索，取得当前最新可查询的市场数据。
@@ -4394,7 +4394,7 @@ Fib不是必用项。
 
 - 数据值
 - 交易所或数据平台
-- XRPUSDT永续合约口径
+- SOLUSDT永续合约口径
 - 数据自身时间或页面更新时间
 - 本轮查询时间
 - 上海时间UTC+8
@@ -4411,7 +4411,7 @@ Fib不是必用项。
 按照以下顺序获取数据：
 
 1. 与最近5分钟截图相同交易所的官方公开行情接口
-2. 同交易所官方XRPUSDT永续交易页面
+2. 同交易所官方SOLUSDT永续交易页面
 3. 其他主流交易所官方公开行情接口
 4. 其他主流交易所官方永续交易页面
 5. 带有明确更新时间的可靠聚合平台
@@ -4468,7 +4468,7 @@ Fib不是必用项。
 
 只要网页取得的数据能够明确确认：
 
-- 是XRPUSDT永续合约
+- 是SOLUSDT永续合约
 - 交易所明确
 - 价格类型明确
 - 具体价格明确
@@ -5084,11 +5084,11 @@ Fib不是必用项。
 
 最终报告只保留以下六部分。
 
-# XRPUSDT无图实时更新
+# SOLUSDT无图实时更新
 
 数据查询时间：日期、时间、上海时间UTC+8。  
 最新可查询行情时间：实际数据时间。  
-主价格来源：交易所、XRPUSDT永续成交价。  
+主价格来源：交易所、SOLUSDT永续成交价。  
 交叉验证来源：其他交易所报价，如有。  
 历史结构来源：本会话最近一次5分钟原图、标注图和1小时原图。
 
